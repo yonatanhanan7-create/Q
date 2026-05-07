@@ -1,41 +1,42 @@
-import { TrendingUp, Lock, Users } from 'lucide-react';
-import { useFundStats } from '../hooks/useFundStats.js';
+import { TrendingUp, Lock, Activity } from 'lucide-react';
+import { useVaultData } from '../hooks/useVaultData.js';
 
 const formatUsd = (n) =>
   '$' +
-  n.toLocaleString('en-US', {
+  (n || 0).toLocaleString('en-US', {
     maximumFractionDigits: 0,
   });
 
 export default function StatsBar() {
-  const { tvl, roi, investors } = useFundStats();
+  const { tvl, apy, isLoading } = useVaultData();
 
   const items = [
     {
-      label: 'Total Value Locked',
-      value: formatUsd(tvl),
+      label: 'Aave Sepolia USDC TVL',
+      value: isLoading ? '…' : formatUsd(tvl),
       icon: Lock,
       accent: 'from-emerald-400/20 to-emerald-400/0',
     },
     {
-      label: 'Current ROI (YTD)',
-      value: `${roi.toFixed(2)}%`,
+      label: 'Current Supply APY',
+      value: isLoading ? '…' : `${(apy * 100).toFixed(2)}%`,
       icon: TrendingUp,
       accent: 'from-cyan-400/20 to-cyan-400/0',
       positive: true,
     },
     {
-      label: 'Active Investors',
-      value: investors.toLocaleString('en-US'),
-      icon: Users,
+      label: 'Source of yield',
+      value: 'Aave V3',
+      icon: Activity,
       accent: 'from-amber-300/20 to-amber-300/0',
+      sub: 'Public lending pool',
     },
   ];
 
   return (
     <section className="mx-auto max-w-7xl px-6 pb-12">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {items.map(({ label, value, icon: Icon, accent, positive }) => (
+        {items.map(({ label, value, icon: Icon, accent, positive, sub }) => (
           <div
             key={label}
             className="glass-card group relative overflow-hidden p-6"
@@ -56,7 +57,7 @@ export default function StatsBar() {
             </p>
             <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
               <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-              Live · updated every block
+              {sub || 'Read directly from Aave V3 · refreshes every block'}
             </div>
           </div>
         ))}

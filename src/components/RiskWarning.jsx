@@ -1,9 +1,9 @@
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, ArrowRight } from 'lucide-react';
 
-export default function RiskWarning() {
+export default function RiskWarning({ onLearnMore }) {
   return (
     <section
-      id="risk"
+      id="risk-summary"
       className="mx-auto max-w-7xl scroll-mt-20 px-6 pt-8 pb-20"
     >
       <div className="glass-card relative overflow-hidden border-amber-400/20 p-6 sm:p-8">
@@ -14,26 +14,30 @@ export default function RiskWarning() {
           </span>
           <div className="space-y-3 text-sm leading-relaxed text-slate-300">
             <p className="font-display text-base font-semibold text-amber-200">
-              Risk disclosure
+              Read this before depositing anything
             </p>
             <p>
-              Investing in digital assets involves a high degree of risk,
-              including the risk of total loss of capital. Past performance is
-              not indicative of future results. Strategy returns are
-              variable and may be negative.
-            </p>
-            <p>
-              AlphaChain Capital vaults are smart-contract based and inherit
-              risks from underlying protocols, including (but not limited to)
-              smart-contract bugs, oracle manipulation, depegging events, and
-              counterparty risk on centralized venues used for hedging.
+              DeFi yields are not guaranteed. Smart contracts can have bugs.
+              Stablecoins can de-peg. Oracles can fail. The yield you see is
+              whatever Aave V3 is paying right now — it can drop, it can spike,
+              it can go to zero. Anyone promising a fixed return on a real
+              on-chain vault is misleading you.
             </p>
             <p className="text-slate-400">
-              Nothing on this page constitutes investment, legal, or tax
-              advice. AlphaChain Capital is not available to U.S. persons or
-              residents of restricted jurisdictions. Please consult a
-              qualified advisor before investing.
+              This site is a non-custodial demo on a public testnet. Nothing
+              here is investment advice or a solicitation. Read the full risk
+              disclosure before using anything similar on mainnet.
             </p>
+            {onLearnMore && (
+              <button
+                type="button"
+                onClick={onLearnMore}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-amber-200 hover:text-amber-100"
+              >
+                Read full risk disclosure
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
       </div>

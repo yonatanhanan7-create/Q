@@ -1,25 +1,25 @@
-import { Wallet, LineChart, Coins, ShieldCheck } from 'lucide-react';
+import { Wallet, Coins, ShieldCheck, ArrowDownToLine } from 'lucide-react';
 
 const steps = [
   {
     icon: Wallet,
-    title: '1. Connect your wallet',
-    body: 'Securely connect MetaMask, Coinbase Wallet, Rainbow or any WalletConnect-compatible wallet. AlphaChain never takes custody of your funds.',
+    title: '1. Connect a wallet on Sepolia',
+    body: 'MetaMask, Coinbase Wallet, Rainbow, or any WalletConnect-compatible wallet works. We never take custody of your keys or your funds.',
   },
   {
     icon: Coins,
-    title: '2. Deposit USDT or ETH',
-    body: 'Allocate to the vault in a single transaction. You receive ERC-4626 fund shares (acAlpha) representing your stake.',
-  },
-  {
-    icon: LineChart,
-    title: '3. Strategies deploy capital',
-    body: 'Our portfolio managers rebalance across delta-neutral, basis trade, and curated long-only strategies — all executed on-chain.',
+    title: '2. Get free test USDC',
+    body: 'A button on the dashboard links straight to the public Aave Sepolia faucet. Mint as much test USDC as you want — it is worthless on mainnet.',
   },
   {
     icon: ShieldCheck,
+    title: '3. Deposit into the Aave pool',
+    body: 'Approve once, then supply USDC to Aave V3. You receive aUSDC in your wallet that grows in your balance as interest accrues, second by second.',
+  },
+  {
+    icon: ArrowDownToLine,
     title: '4. Withdraw any time',
-    body: 'Redeem your shares for the underlying assets at NAV. No lock-ups, no off-chain promises, no custodians.',
+    body: 'Redeem your aUSDC back into USDC in a single transaction. There are no lock-ups, no withdrawal fees, no admin approval.',
   },
 ];
 
@@ -35,8 +35,9 @@ export default function HowItWorks() {
           Four steps. Zero custodians.
         </h2>
         <p className="mt-4 text-slate-300">
-          Deposit, earn, and withdraw — entirely on-chain. Every position is
-          publicly verifiable, every fee is transparent, every share is yours.
+          The whole point of this demo is that there is nothing magic happening
+          off-chain. Every step below is a public smart-contract call you can
+          inspect on Etherscan.
         </p>
       </div>
 

@@ -1,6 +1,9 @@
-import { Hexagon, Github, Twitter, FileText } from 'lucide-react';
+import { Hexagon, Github, FileText, AlertTriangle } from 'lucide-react';
 
-export default function Footer() {
+export default function Footer({ onNavigate }) {
+  const link =
+    'inline-flex items-center gap-1.5 transition hover:text-emerald-400';
+
   return (
     <footer className="border-t border-white/5 bg-brand-deep/60">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between">
@@ -10,45 +13,39 @@ export default function Footer() {
           </span>
           <div className="leading-tight">
             <p className="font-display text-sm font-semibold text-white">
-              AlphaChain Capital
+              AlphaChain Capital · demo
             </p>
             <p className="text-xs text-slate-500">
-              © {new Date().getFullYear()} · Non-custodial on-chain fund
+              © {new Date().getFullYear()} · Open-source · Sepolia testnet only
             </p>
           </div>
         </div>
 
         <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-400">
-          <a href="#how-it-works" className="hover:text-emerald-400">
-            How it works
-          </a>
-          <a href="#strategy" className="hover:text-emerald-400">
-            Strategy
-          </a>
-          <a href="#risk" className="hover:text-emerald-400">
-            Risk
-          </a>
-          <span className="hidden h-1 w-1 rounded-full bg-slate-600 sm:inline-block" />
-          <a
-            href="#"
-            className="inline-flex items-center gap-1.5 hover:text-emerald-400"
+          <button
+            type="button"
+            onClick={() => onNavigate('terms')}
+            className={link}
           >
             <FileText className="h-4 w-4" />
-            Audit report
-          </a>
+            Terms
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate('risk')}
+            className={link}
+          >
+            <AlertTriangle className="h-4 w-4" />
+            Risk
+          </button>
           <a
-            href="#"
-            className="inline-flex items-center gap-1.5 hover:text-emerald-400"
+            href="https://github.com/yonatanhanan7-create/Q"
+            target="_blank"
+            rel="noreferrer"
+            className={link}
           >
             <Github className="h-4 w-4" />
-            GitHub
-          </a>
-          <a
-            href="#"
-            className="inline-flex items-center gap-1.5 hover:text-emerald-400"
-          >
-            <Twitter className="h-4 w-4" />
-            X / Twitter
+            Source
           </a>
         </nav>
       </div>

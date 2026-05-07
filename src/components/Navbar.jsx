@@ -20,21 +20,42 @@ export default function Navbar({ onNavigate, currentView, showDashboardLink }) {
               AlphaChain
             </p>
             <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400">
-              Capital
+              Capital · demo
             </p>
           </div>
         </button>
 
         <nav className="hidden items-center gap-8 md:flex">
-          <a href="#how-it-works" className={navItem}>
-            How it works
-          </a>
-          <a href="#strategy" className={navItem}>
-            Strategy
-          </a>
-          <a href="#risk" className={navItem}>
+          {currentView === 'home' ? (
+            <>
+              <a href="#how-it-works" className={navItem}>
+                How it works
+              </a>
+              <a href="#strategy" className={navItem}>
+                Strategy
+              </a>
+            </>
+          ) : (
+            <button onClick={() => onNavigate('home')} className={navItem}>
+              Home
+            </button>
+          )}
+          <button
+            onClick={() => onNavigate('risk')}
+            className={`${navItem} ${
+              currentView === 'risk' ? 'text-emerald-400' : ''
+            }`}
+          >
             Risk
-          </a>
+          </button>
+          <button
+            onClick={() => onNavigate('terms')}
+            className={`${navItem} ${
+              currentView === 'terms' ? 'text-emerald-400' : ''
+            }`}
+          >
+            Terms
+          </button>
           {showDashboardLink && (
             <button
               onClick={() => onNavigate('dashboard')}

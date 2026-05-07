@@ -1,29 +1,25 @@
 import { Activity, Boxes, Gauge, Layers } from 'lucide-react';
 
-const strategies = [
+const points = [
   {
     icon: Activity,
-    title: 'Delta-Neutral Yield',
-    weight: '45%',
-    body: 'Funding-rate arbitrage and stable LP positions hedged with perpetual shorts. Targets steady, market-uncorrelated returns.',
+    title: 'Single source of yield',
+    body: 'Deposits are forwarded into the public Aave V3 USDC market on Sepolia. The yield you earn is exactly the supply rate Aave pays — nothing more, nothing less.',
   },
   {
     icon: Layers,
-    title: 'Restaking & LST Basis',
-    weight: '25%',
-    body: 'Captures the spread between liquid staking tokens and ETH plus EigenLayer points exposure, hedged for duration.',
+    title: 'No fixed APY, ever',
+    body: 'Rates float with utilization. They go up when borrowers pay more, down when borrowing slows. Anyone promising you a fixed return on a real DeFi vault is making it up.',
   },
   {
     icon: Boxes,
-    title: 'Curated Long-Only',
-    weight: '20%',
-    body: 'Concentrated positions in high-conviction L1/L2 and infrastructure tokens, with quarterly rebalancing.',
+    title: 'Non-custodial, withdraw any time',
+    body: 'You hold the aTokens, not us. Withdrawals execute against the same Aave pool any address can call. No lock-ups, no opaque off-chain bookkeeping.',
   },
   {
     icon: Gauge,
-    title: 'Tactical Reserves',
-    weight: '10%',
-    body: 'USDC reserves deployed into top-tier money markets to provide redemption liquidity and dry powder.',
+    title: 'Nothing to set, nothing to admin',
+    body: 'There is no admin dashboard for "performance" or "Tier B" returns. There is no hidden multiplier. Verify the addresses below on Etherscan and read the same data we read.',
   },
 ];
 
@@ -35,47 +31,48 @@ export default function Strategy() {
     >
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
         <div>
-          <p className="stat-label">Investment strategy</p>
+          <p className="stat-label">How yield is generated</p>
           <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-            A diversified, risk-first playbook.
+            One protocol. Zero opinions.
           </h2>
           <p className="mt-5 text-slate-300">
-            Capital is allocated across four mandates with distinct
-            risk-return profiles. Each mandate is sleeved into its own on-chain
-            sub-vault, with hard exposure caps and circuit breakers enforced by
-            the smart contract.
+            This is intentionally a boring vault. Capital is deposited 1:1 into
+            Aave V3&rsquo;s USDC reserve and the share token (aUSDC) accrues
+            interest in real time. There are no rebalancing strategies, no
+            leverage, no off-chain hedges, and no &ldquo;profit sharing tier&rdquo;
+            controlled by an admin.
           </p>
 
-          <dl className="mt-8 grid grid-cols-2 gap-4 sm:max-w-md">
+          <dl className="mt-8 grid grid-cols-1 gap-4 sm:max-w-md sm:grid-cols-2">
             <div className="glass-card p-4">
-              <dt className="stat-label">Sharpe (LTM)</dt>
-              <dd className="mt-1 font-display text-2xl font-semibold text-white">
-                2.41
+              <dt className="stat-label">Network</dt>
+              <dd className="mt-1 font-display text-base font-semibold text-white">
+                Sepolia testnet
               </dd>
             </div>
             <div className="glass-card p-4">
-              <dt className="stat-label">Max Drawdown</dt>
-              <dd className="mt-1 font-display text-2xl font-semibold text-white">
-                -7.8%
+              <dt className="stat-label">Underlying</dt>
+              <dd className="mt-1 font-display text-base font-semibold text-white">
+                USDC (Aave faucet)
               </dd>
             </div>
             <div className="glass-card p-4">
-              <dt className="stat-label">Mgmt Fee</dt>
-              <dd className="mt-1 font-display text-2xl font-semibold text-white">
-                1.5%
+              <dt className="stat-label">Share token</dt>
+              <dd className="mt-1 font-display text-base font-semibold text-white">
+                aUSDC (Aave V3)
               </dd>
             </div>
             <div className="glass-card p-4">
-              <dt className="stat-label">Performance Fee</dt>
-              <dd className="mt-1 font-display text-2xl font-semibold text-white">
-                15%
+              <dt className="stat-label">Custody</dt>
+              <dd className="mt-1 font-display text-base font-semibold text-white">
+                Your wallet
               </dd>
             </div>
           </dl>
         </div>
 
         <div className="space-y-4">
-          {strategies.map(({ icon: Icon, title, body, weight }) => (
+          {points.map(({ icon: Icon, title, body }) => (
             <div
               key={title}
               className="glass-card flex gap-4 p-5 transition hover:border-emerald-400/30"
@@ -84,14 +81,9 @@ export default function Strategy() {
                 <Icon className="h-5 w-5" />
               </span>
               <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-display text-base font-semibold text-white">
-                    {title}
-                  </h3>
-                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-0.5 text-xs font-medium text-emerald-300">
-                    {weight}
-                  </span>
-                </div>
+                <h3 className="font-display text-base font-semibold text-white">
+                  {title}
+                </h3>
                 <p className="mt-1.5 text-sm text-slate-400">{body}</p>
               </div>
             </div>
