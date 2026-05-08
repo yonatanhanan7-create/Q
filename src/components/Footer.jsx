@@ -16,7 +16,7 @@ export default function Footer({ onNavigate }) {
               AlphaChain Capital · demo
             </p>
             <p className="text-xs text-slate-500">
-              © {new Date().getFullYear()} · Open-source · Sepolia testnet only
+              © {new Date().getFullYear()} · Open-source · Unaudited
             </p>
           </div>
         </div>

@@ -10,22 +10,21 @@ export default function Hero({ onLaunchApp }) {
       <div className="mx-auto max-w-3xl text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/5 px-3 py-1 text-xs font-medium text-emerald-300">
           <Sparkles className="h-3.5 w-3.5" />
-          Open-source demo · Sepolia testnet · powered by Aave V3
+          Non-custodial managed trading vault · open-source
         </span>
 
         <h1 className="mt-6 font-display text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
-          Transparent,{' '}
+          A managed vault that{' '}
           <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-cyan-300 bg-clip-text text-transparent">
-            on-chain yield
-          </span>{' '}
-          you can verify yourself.
+            cannot rug you.
+          </span>
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-300">
-          AlphaChain is a non-custodial demo vault. It supplies USDC to the
-          public Aave V3 lending market and your share of the yield is paid by
-          the protocol — not by us. Every number on this page is read from a
-          smart contract, not set by an admin.
+          Deposit USDC. The manager trades it on-chain through whitelisted DEX
+          routers — and only those. The contract enforces that every position,
+          every P&amp;L, and every share-price is read from the chain. No
+          admin-set returns, no off-chain ledger.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -56,12 +55,12 @@ export default function Hero({ onLaunchApp }) {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
           <span className="inline-flex items-center gap-1.5">
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            Non-custodial
+            Manager cannot withdraw to self
           </span>
           <span className="hidden h-1 w-1 rounded-full bg-slate-600 sm:inline-block" />
-          <span>No fixed-yield promises</span>
+          <span>NAV from Chainlink + on-chain balances</span>
           <span className="hidden h-1 w-1 rounded-full bg-slate-600 sm:inline-block" />
-          <span>Read-only contract integration</span>
+          <span>Performance fee with high-water mark</span>
         </div>
       </div>
     </section>

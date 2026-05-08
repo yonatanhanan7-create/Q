@@ -1,87 +1,156 @@
-import { useReadContract, useReadContracts, useAccount } from 'wagmi';
+import { useAccount, useReadContracts } from 'wagmi';
 import { formatUnits } from 'viem';
 
 import {
-  AAVE_SEPOLIA,
-  RESERVE,
-  SEPOLIA_CHAIN_ID,
-  aavePoolAbi,
+  VAULT_ADDRESS,
+  VAULT_ASSET,
+  VAULT_ASSET_DECIMALS,
+  VAULT_CHAIN_ID,
+  isVaultConfigured,
   erc20Abi,
-  liquidityRateToApy,
-} from '../lib/aave.js';
+  tradingVaultAbi,
+} from '../lib/vault.js';
 
-// Reads live vault metrics (TVL, APY) and the connected user's balances
-// directly from Aave V3 on Sepolia. No manual updates, no admin overrides —
-// every value below is whatever the contract returns at this block.
+const SHARE_PRECISION = 10n ** 18n;
+
 export function useVaultData() {
   const { address } = useAccount();
 
-  const { data: reserveData, isLoading: reserveLoading } = useReadContract({
-    address: AAVE_SEPOLIA.pool,
-    abi: aavePoolAbi,
-    functionName: 'getReserveData',
-    args: [RESERVE.asset],
-    chainId: SEPOLIA_CHAIN_ID,
-    query: { refetchInterval: 15_000 },
-  });
+  const baseContracts = isVaultConfigured
+    ? [
+        {
+          address: VAULT_ADDRESS,
+          abi: tradingVaultAbi,
+          functionName: 'totalAssets',
+          chainId: VAULT_CHAIN_ID,
+        },
+        {
+          address: VAULT_ADDRESS,
+          abi: tradingVaultAbi,
+          functionName: 'totalSupply',
+          chainId: VAULT_CHAIN_ID,
+        },
+        {
+          address: VAULT_ADDRESS,
+          abi: tradingVaultAbi,
+          functionName: 'sharePrice',
+          chainId: VAULT_CHAIN_ID,
+        },
+        {
+          address: VAULT_ADDRESS,
+          abi: tradingVaultAbi,
+          functionName: 'highWaterMark',
+          chainId: VAULT_CHAIN_ID,
+        },
+        {
+          address: VAULT_ADDRESS,
+          abi: tradingVaultAbi,
+          functionName: 'manager',
+          chainId: VAULT_CHAIN_ID,
+        },
+        {
+          address: VAULT_ADDRESS,
+          abi: tradingVaultAbi,
+          functionName: 'performanceFeeBps',
+          chainId: VAULT_CHAIN_ID,
+        },
+      ]
+    : [];
 
-  const { data: tvlRaw } = useReadContract({
-    address: RESERVE.aToken,
-    abi: erc20Abi,
-    functionName: 'totalSupply',
-    chainId: SEPOLIA_CHAIN_ID,
-    query: { refetchInterval: 15_000 },
-  });
-
-  const { data: userReads } = useReadContracts({
-    contracts: address
+  const userContracts =
+    isVaultConfigured && address
       ? [
           {
-            address: RESERVE.asset,
+            address: VAULT_ADDRESS,
+            abi: tradingVaultAbi,
+            functionName: 'balanceOf',
+            args: [address],
+            chainId: VAULT_CHAIN_ID,
+          },
+          {
+            address: VAULT_ASSET,
             abi: erc20Abi,
             functionName: 'balanceOf',
             args: [address],
-            chainId: SEPOLIA_CHAIN_ID,
+            chainId: VAULT_CHAIN_ID,
           },
           {
-            address: RESERVE.aToken,
-            abi: erc20Abi,
-            functionName: 'balanceOf',
-            args: [address],
-            chainId: SEPOLIA_CHAIN_ID,
-          },
-          {
-            address: RESERVE.asset,
+            address: VAULT_ASSET,
             abi: erc20Abi,
             functionName: 'allowance',
-            args: [address, AAVE_SEPOLIA.pool],
-            chainId: SEPOLIA_CHAIN_ID,
+            args: [address, VAULT_ADDRESS],
+            chainId: VAULT_CHAIN_ID,
           },
         ]
-      : [],
-    query: { enabled: !!address, refetchInterval: 15_000 },
+      : [];
+
+  const { data, isLoading, refetch } = useReadContracts({
+    contracts: [...baseContracts, ...userContracts],
+    query: {
+      enabled: isVaultConfigured,
+      refetchInterval: 12_000,
+    },
   });
 
-  const apy = reserveData ? liquidityRateToApy(reserveData.currentLiquidityRate) : 0;
-  const tvl = tvlRaw ? Number(formatUnits(tvlRaw, RESERVE.decimals)) : 0;
-  const walletBalance =
-    userReads?.[0]?.result != null
-      ? Number(formatUnits(userReads[0].result, RESERVE.decimals))
-      : 0;
-  const vaultBalance =
-    userReads?.[1]?.result != null
-      ? Number(formatUnits(userReads[1].result, RESERVE.decimals))
-      : 0;
-  const allowance = userReads?.[2]?.result ?? 0n;
+  if (!isVaultConfigured || !data) {
+    return {
+      configured: isVaultConfigured,
+      isLoading,
+      refetch,
+      tvl: 0,
+      totalShares: 0n,
+      sharePriceRaw: SHARE_PRECISION,
+      sharePrice: 1,
+      highWaterMark: 1,
+      manager: null,
+      performanceFeeBps: 0,
+      userShares: 0n,
+      userSharesNum: 0,
+      userValue: 0,
+      walletBalance: 0,
+      walletBalanceRaw: 0n,
+      allowance: 0n,
+    };
+  }
+
+  const tvlRaw = data[0]?.result ?? 0n;
+  const totalShares = data[1]?.result ?? 0n;
+  const sharePriceRaw = data[2]?.result ?? SHARE_PRECISION;
+  const highWaterMarkRaw = data[3]?.result ?? SHARE_PRECISION;
+  const manager = data[4]?.result ?? null;
+  const performanceFeeBps = Number(data[5]?.result ?? 0n);
+
+  const userShares = data[6]?.result ?? 0n;
+  const walletBalanceRaw = data[7]?.result ?? 0n;
+  const allowance = data[8]?.result ?? 0n;
+
+  const tvl = Number(formatUnits(tvlRaw, VAULT_ASSET_DECIMALS));
+  const sharePrice = Number(formatUnits(sharePriceRaw, 18));
+  const highWaterMark = Number(formatUnits(highWaterMarkRaw, 18));
+  const userSharesNum = Number(formatUnits(userShares, 18));
+  const userValueRaw =
+    totalShares > 0n ? (userShares * tvlRaw) / totalShares : 0n;
+  const userValue = Number(formatUnits(userValueRaw, VAULT_ASSET_DECIMALS));
+  const walletBalance = Number(
+    formatUnits(walletBalanceRaw, VAULT_ASSET_DECIMALS),
+  );
 
   return {
-    apy,
+    configured: true,
+    isLoading,
+    refetch,
     tvl,
+    totalShares,
+    sharePriceRaw,
+    sharePrice,
+    highWaterMark,
+    manager,
+    performanceFeeBps,
+    userShares,
+    userSharesNum,
+    userValue,
     walletBalance,
-    vaultBalance,
+    walletBalanceRaw,
     allowance,
-    isLoading: reserveLoading,
-    walletBalanceRaw: userReads?.[0]?.result ?? 0n,
-    vaultBalanceRaw: userReads?.[1]?.result ?? 0n,
   };
 }

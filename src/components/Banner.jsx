@@ -6,10 +6,10 @@ export default function Banner() {
       <div className="mx-auto flex max-w-7xl items-start gap-2 px-6 py-2 text-xs">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <p>
-          <strong className="font-semibold">Demo on Sepolia testnet.</strong>{' '}
-          No real funds are accepted. Deposits route to the public Aave V3
-          Sepolia market, and yields are whatever Aave actually pays — no fixed
-          APY, no admin-set returns.
+          <strong className="font-semibold">Unaudited managed vault.</strong>{' '}
+          Manager trades on whitelisted DEXes only and cannot withdraw to
+          self. Performance moves with trading P&amp;L — your principal can
+          and will fluctuate.
         </p>
       </div>
     </div>

@@ -1,35 +1,49 @@
 import { TrendingUp, Lock, Activity } from 'lucide-react';
 import { useVaultData } from '../hooks/useVaultData.js';
+import { VAULT_ASSET_SYMBOL, isVaultConfigured } from '../lib/vault.js';
 
-const formatUsd = (n) =>
-  '$' +
+const fmt = (n) =>
   (n || 0).toLocaleString('en-US', {
     maximumFractionDigits: 0,
   });
 
 export default function StatsBar() {
-  const { tvl, apy, isLoading } = useVaultData();
+  const v = useVaultData();
+
+  const tvlValue = !isVaultConfigured
+    ? '— · not deployed'
+    : v.isLoading
+      ? '…'
+      : `${fmt(v.tvl)} ${VAULT_ASSET_SYMBOL}`;
+
+  const perfValue = !isVaultConfigured
+    ? '—'
+    : v.isLoading
+      ? '…'
+      : `${((v.sharePrice - 1) * 100).toFixed(2)}%`;
 
   const items = [
     {
-      label: 'Aave Sepolia USDC TVL',
-      value: isLoading ? '…' : formatUsd(tvl),
+      label: 'TVL (live)',
+      value: tvlValue,
       icon: Lock,
       accent: 'from-emerald-400/20 to-emerald-400/0',
+      sub: 'Read from TradingVault.totalAssets()',
     },
     {
-      label: 'Current Supply APY',
-      value: isLoading ? '…' : `${(apy * 100).toFixed(2)}%`,
+      label: 'Cumulative performance',
+      value: perfValue,
       icon: TrendingUp,
       accent: 'from-cyan-400/20 to-cyan-400/0',
       positive: true,
+      sub: 'sharePrice − 1, on-chain',
     },
     {
-      label: 'Source of yield',
-      value: 'Aave V3',
+      label: 'Mandate',
+      value: 'On-chain DEX',
       icon: Activity,
       accent: 'from-amber-300/20 to-amber-300/0',
-      sub: 'Public lending pool',
+      sub: 'Manager trades via whitelisted routers',
     },
   ];
 
@@ -57,7 +71,7 @@ export default function StatsBar() {
             </p>
             <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
               <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-              {sub || 'Read directly from Aave V3 · refreshes every block'}
+              {sub}
             </div>
           </div>
         ))}

@@ -1,25 +1,25 @@
-import { Wallet, Coins, ShieldCheck, ArrowDownToLine } from 'lucide-react';
+import { Wallet, ArrowDownToLine, Activity, ArrowUpToLine } from 'lucide-react';
 
 const steps = [
   {
     icon: Wallet,
-    title: '1. Connect a wallet on Sepolia',
-    body: 'MetaMask, Coinbase Wallet, Rainbow, or any WalletConnect-compatible wallet works. We never take custody of your keys or your funds.',
-  },
-  {
-    icon: Coins,
-    title: '2. Get free test USDC',
-    body: 'A button on the dashboard links straight to the public Aave Sepolia faucet. Mint as much test USDC as you want — it is worthless on mainnet.',
-  },
-  {
-    icon: ShieldCheck,
-    title: '3. Deposit into the Aave pool',
-    body: 'Approve once, then supply USDC to Aave V3. You receive aUSDC in your wallet that grows in your balance as interest accrues, second by second.',
+    title: '1. Connect & approve',
+    body: 'Connect a wallet on the deployment chain (Sepolia for testing, Arbitrum/Mainnet for production). One-time approval lets the vault contract pull USDC from your wallet — only the amount you authorise.',
   },
   {
     icon: ArrowDownToLine,
-    title: '4. Withdraw any time',
-    body: 'Redeem your aUSDC back into USDC in a single transaction. There are no lock-ups, no withdrawal fees, no admin approval.',
+    title: '2. Deposit USDC',
+    body: 'Call deposit(). The contract reads its own NAV via Chainlink, mints you shares at the live price, and emits a Deposit event. Your shares are an ERC-20 you can transfer or hold in cold storage.',
+  },
+  {
+    icon: Activity,
+    title: '3. Manager trades on-chain',
+    body: 'The manager opens and closes positions through whitelisted Uniswap V3 routers. Every swap is a public transaction with a Trade event. There is no off-chain execution venue.',
+  },
+  {
+    icon: ArrowUpToLine,
+    title: '4. Redeem shares',
+    body: 'Call withdraw() and burn your shares for a proportional slice of the vault’s liquid USDC. No lock-ups, no admin approval. The same NAV math runs on the way out as on the way in.',
   },
 ];
 
@@ -32,12 +32,12 @@ export default function HowItWorks() {
       <div className="mx-auto max-w-2xl text-center">
         <p className="stat-label">How it works</p>
         <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-          Four steps. Zero custodians.
+          Four steps. One smart contract.
         </h2>
         <p className="mt-4 text-slate-300">
-          The whole point of this demo is that there is nothing magic happening
-          off-chain. Every step below is a public smart-contract call you can
-          inspect on Etherscan.
+          Everything you see on this page maps to a function in{' '}
+          <code className="text-emerald-300">TradingVault.sol</code>. Read it,
+          run it, fork it.
         </p>
       </div>
 

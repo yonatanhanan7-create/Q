@@ -1,25 +1,25 @@
-import { Activity, Boxes, Gauge, Layers } from 'lucide-react';
+import { Activity, Lock, Eye, Percent } from 'lucide-react';
 
 const points = [
   {
+    icon: Lock,
+    title: 'The manager can trade — not steal',
+    body: 'The TradingVault contract has two roles: depositors and a manager. The manager calls a single function — trade() — that swaps tokens through a whitelisted DEX router. Any other transfer of funds reverts. There is no withdrawAdmin, no emergencyDrain, no upgrade backdoor.',
+  },
+  {
+    icon: Eye,
+    title: 'NAV is computed, not declared',
+    body: 'totalAssets() sums the vault’s USDC balance and the USD-equivalent of every whitelisted token it currently holds, priced via Chainlink. Share price is totalAssets() / totalSupply(). It is not editable. Period.',
+  },
+  {
+    icon: Percent,
+    title: 'Performance fee with a high-water mark',
+    body: 'The manager only earns on new gains above the previous peak share price. If the vault loses 20% and recovers 15%, the manager earns nothing — depositors must be made whole first. The fee is hard-capped at 30% by the contract.',
+  },
+  {
     icon: Activity,
-    title: 'Single source of yield',
-    body: 'Deposits are forwarded into the public Aave V3 USDC market on Sepolia. The yield you earn is exactly the supply rate Aave pays — nothing more, nothing less.',
-  },
-  {
-    icon: Layers,
-    title: 'No fixed APY, ever',
-    body: 'Rates float with utilization. They go up when borrowers pay more, down when borrowing slows. Anyone promising you a fixed return on a real DeFi vault is making it up.',
-  },
-  {
-    icon: Boxes,
-    title: 'Non-custodial, withdraw any time',
-    body: 'You hold the aTokens, not us. Withdrawals execute against the same Aave pool any address can call. No lock-ups, no opaque off-chain bookkeeping.',
-  },
-  {
-    icon: Gauge,
-    title: 'Nothing to set, nothing to admin',
-    body: 'There is no admin dashboard for "performance" or "Tier B" returns. There is no hidden multiplier. Verify the addresses below on Etherscan and read the same data we read.',
+    title: 'Withdrawals from liquid USDC',
+    body: 'When you redeem shares, the contract sends you a proportional share of its USDC balance. If the manager has open positions, they must liquidate to honour withdrawals — the same constraint a real fund operates under.',
   },
 ];
 
@@ -31,41 +31,40 @@ export default function Strategy() {
     >
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
         <div>
-          <p className="stat-label">How yield is generated</p>
+          <p className="stat-label">Architecture</p>
           <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-            One protocol. Zero opinions.
+            Trust the contract, not the manager.
           </h2>
           <p className="mt-5 text-slate-300">
-            This is intentionally a boring vault. Capital is deposited 1:1 into
-            Aave V3&rsquo;s USDC reserve and the share token (aUSDC) accrues
-            interest in real time. There are no rebalancing strategies, no
-            leverage, no off-chain hedges, and no &ldquo;profit sharing tier&rdquo;
-            controlled by an admin.
+            Most &ldquo;crypto investment funds&rdquo; ask you to trust a
+            person. This one asks you to verify a contract. The complete
+            source is in <code className="text-emerald-300">contracts/TradingVault.sol</code>{' '}
+            — read it before you deposit.
           </p>
 
           <dl className="mt-8 grid grid-cols-1 gap-4 sm:max-w-md sm:grid-cols-2">
             <div className="glass-card p-4">
-              <dt className="stat-label">Network</dt>
-              <dd className="mt-1 font-display text-base font-semibold text-white">
-                Sepolia testnet
-              </dd>
-            </div>
-            <div className="glass-card p-4">
-              <dt className="stat-label">Underlying</dt>
-              <dd className="mt-1 font-display text-base font-semibold text-white">
-                USDC (Aave faucet)
-              </dd>
-            </div>
-            <div className="glass-card p-4">
-              <dt className="stat-label">Share token</dt>
-              <dd className="mt-1 font-display text-base font-semibold text-white">
-                aUSDC (Aave V3)
-              </dd>
-            </div>
-            <div className="glass-card p-4">
               <dt className="stat-label">Custody</dt>
               <dd className="mt-1 font-display text-base font-semibold text-white">
-                Your wallet
+                Smart contract
+              </dd>
+            </div>
+            <div className="glass-card p-4">
+              <dt className="stat-label">Manager scope</dt>
+              <dd className="mt-1 font-display text-base font-semibold text-white">
+                Trade only
+              </dd>
+            </div>
+            <div className="glass-card p-4">
+              <dt className="stat-label">Allowed venues</dt>
+              <dd className="mt-1 font-display text-base font-semibold text-white">
+                Uniswap V3 (whitelist)
+              </dd>
+            </div>
+            <div className="glass-card p-4">
+              <dt className="stat-label">Pricing</dt>
+              <dd className="mt-1 font-display text-base font-semibold text-white">
+                Chainlink, &lt; 1h staleness
               </dd>
             </div>
           </dl>

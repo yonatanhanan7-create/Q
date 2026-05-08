@@ -17,16 +17,17 @@ export default function RiskWarning({ onLearnMore }) {
               Read this before depositing anything
             </p>
             <p>
-              DeFi yields are not guaranteed. Smart contracts can have bugs.
-              Stablecoins can de-peg. Oracles can fail. The yield you see is
-              whatever Aave V3 is paying right now — it can drop, it can spike,
-              it can go to zero. Anyone promising a fixed return on a real
-              on-chain vault is misleading you.
+              This is a managed trading vault. The manager trades on-chain
+              with depositor funds — and trading loses money sometimes. The
+              contract prevents theft; it does not prevent bad trades, MEV
+              loss, oracle issues, or smart-contract bugs. There is no
+              guaranteed yield, no principal protection, no insurance.
             </p>
             <p className="text-slate-400">
-              This site is a non-custodial demo on a public testnet. Nothing
-              here is investment advice or a solicitation. Read the full risk
-              disclosure before using anything similar on mainnet.
+              The contract is unaudited. Operating a managed vault for the
+              public is regulated in most jurisdictions; depositors are
+              responsible for confirming they may lawfully participate.
+              Read the full risk disclosure before depositing.
             </p>
             {onLearnMore && (
               <button
